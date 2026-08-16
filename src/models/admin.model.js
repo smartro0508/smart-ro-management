@@ -33,6 +33,22 @@ const Admin = sequelize.define('Admin', {
       notEmpty: { msg: 'Password is required' },
       len: { args: [6, 100], msg: 'Password must be at least 6 characters long' }
     }
+  },
+  phone: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  address: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  status: {
+    type: DataTypes.ENUM('Active', 'Offline', 'Suspended'),
+    defaultValue: 'Active'
+  },
+  role: {
+    type: DataTypes.ENUM('Super Admin', 'Sales Manager', 'Technician', 'Support Staff'),
+    defaultValue: 'Technician'
   }
 }, {
   hooks: {

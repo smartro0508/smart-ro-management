@@ -11,3 +11,8 @@ export const getAdminProfile = asyncHandler(async (req, res) => {
   const admin = await adminService.getAdminById(req.admin.id);
   return res.success(admin, 'Profile fetched successfully', 200);
 });
+
+export const updateAdmin = asyncHandler(async (req, res) => {
+  await adminService.updateAdmin(req.params.id, req.body);
+  return res.success(undefined, 'User updated successfully', 200);
+});

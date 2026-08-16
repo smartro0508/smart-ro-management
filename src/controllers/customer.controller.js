@@ -26,3 +26,9 @@ export const deleteCustomer = asyncHandler(async (req, res) => {
   await customerService.deleteCustomer(req.params.id);
   return res.success(undefined, messages.DELETED, 200);
 });
+
+export const searchCustomers = asyncHandler(async (req, res) => {
+  const query = req.query.q || req.body.q;
+  const customers = await customerService.searchCustomers(query);
+  return res.success(customers, messages.FETCHED, 200);
+});

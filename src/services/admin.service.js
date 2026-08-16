@@ -13,3 +13,13 @@ export const getAdminById = async (id) => {
   }
   return admin;
 };
+
+export const updateAdmin = async (id, data) => {
+  const admin = await Admin.findByPk(id);
+  if (!admin) throw new AppError('Admin not found', 404);
+  
+  if (!data.password) {
+    delete data.password;
+  }
+  await admin.update(data);
+};

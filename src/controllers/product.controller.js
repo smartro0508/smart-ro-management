@@ -26,3 +26,9 @@ export const deleteProduct = asyncHandler(async (req, res) => {
   await productService.deleteProduct(req.params.id);
   return res.success(undefined, messages.DELETED, 200);
 });
+
+export const searchProducts = asyncHandler(async (req, res) => {
+  const query = req.query.q || req.body.q;
+  const products = await productService.searchProducts(query);
+  return res.success(products, messages.FETCHED, 200);
+});

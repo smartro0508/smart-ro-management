@@ -8,5 +8,6 @@ router.use(protect);
 
 router.post('/get-all', adminController.getAdmins);
 router.post('/get-profile', adminController.getAdminProfile);
+router.post('/update/:id', adminController.updateAdmin);
 
 export default router;

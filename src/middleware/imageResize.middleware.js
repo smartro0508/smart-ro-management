@@ -1,9 +1,16 @@
 import sharp from 'sharp';
 import crypto from 'crypto';
+import fs from 'fs';
+import path from 'path';
 import asyncHandler from '../utils/asyncHandler.js';
 
 export const resizeProductImages = asyncHandler(async (req, res, next) => {
   if (!req.files) return next();
+
+  const uploadDir = path.join(process.cwd(), 'uploads', 'images');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
 
   // 1) Cover image (mainImage)
   if (req.files.mainImage) {

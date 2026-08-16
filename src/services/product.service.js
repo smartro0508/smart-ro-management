@@ -1,5 +1,6 @@
 import { Product } from '../models/index.js';
 import { AppError } from '../utils/apiResponse.js';
+import { Op } from 'sequelize';
 
 export const createProduct = async (data) => {
   return await Product.create(data);
@@ -23,4 +24,17 @@ export const updateProduct = async (id, data) => {
 export const deleteProduct = async (id) => {
   const product = await getProductById(id);
   return await product.destroy();
+};
+
+export const searchProducts = async (query) => {
+  if (!query) return await Product.findAll();
+  return await Product.findAll({
+    where: {
+      [Op.or]: [
+        { name: { [Op.like]: `%${query}%` } },
+        { sku: { [Op.like]: `%${query}%` } },
+        { shortDescription: { [Op.like]: `%${query}%` } }
+      ]
+    }
+  });
 };

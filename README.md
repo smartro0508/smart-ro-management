@@ -86,6 +86,20 @@ All APIs use the `POST` method.
 - `POST /api/v1/testimonials/update-status/:id` - Update testimonial status (Protected)
 - `POST /api/v1/testimonials/delete/:id` - Delete a testimonial (Protected)
 
+### Expenses (Protected)
+- `POST /api/v1/expenses/create` - Create a new expense
+- `POST /api/v1/expenses/get-all` - Get all expenses
+- `POST /api/v1/expenses/get/:id` - Get an expense by ID
+- `POST /api/v1/expenses/update/:id` - Update an expense
+- `POST /api/v1/expenses/delete/:id` - Delete an expense
+
+### Purchases (Protected)
+- `POST /api/v1/purchases/create` - Create a new purchase order
+- `POST /api/v1/purchases/get-all` - Get all purchase orders
+- `POST /api/v1/purchases/get/:id` - Get a purchase by ID
+- `POST /api/v1/purchases/update/:id` - Update a purchase
+- `POST /api/v1/purchases/delete/:id` - Delete a purchase
+
 ## Architecture
 
 ```

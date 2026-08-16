@@ -11,5 +11,6 @@ router.post('/get-all', customerController.getCustomers);
 router.post('/get/:id', customerController.getCustomer);
 router.post('/update/:id', customerController.updateCustomer);
 router.post('/delete/:id', customerController.deleteCustomer);
+router.post('/search', customerController.searchCustomers);
 
 export default router;

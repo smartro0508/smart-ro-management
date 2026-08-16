@@ -23,5 +23,5 @@ router.post(
   productController.updateProduct
 );
 router.post('/delete/:id', productController.deleteProduct);
-
+router.post('/search', productController.searchProducts);
 export default router;
