@@ -7,8 +7,6 @@ const sendErrorDev = (err, res) => {
   res.status(err.statusCode || 500).json({
     success: false,
     message: err.message,
-    error: err,
-    stack: err.stack
   });
 };
 
@@ -26,7 +24,6 @@ const sendErrorProd = (err, res) => {
     res.status(500).json({
       success: false,
       message: 'Something went very wrong!',
-      error: null
     });
   }
 };

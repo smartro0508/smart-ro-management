@@ -11,7 +11,7 @@ const RefreshToken = sequelize.define('RefreshToken', {
     type: DataTypes.STRING,
     allowNull: false,
   },
-  userId: {
+  adminId: {
     type: DataTypes.UUID,
     allowNull: false,
   },

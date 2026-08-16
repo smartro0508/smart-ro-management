@@ -2,7 +2,7 @@ import { DataTypes } from 'sequelize';
 import { sequelize } from '../config/database.js';
 import bcrypt from 'bcryptjs';
 
-const User = sequelize.define('User', {
+const Admin = sequelize.define('Admin', {
   id: {
     type: DataTypes.UUID,
     defaultValue: DataTypes.UUIDV4,
@@ -36,16 +36,16 @@ const User = sequelize.define('User', {
   }
 }, {
   hooks: {
-    beforeCreate: async (user) => {
-      if (user.password) {
+    beforeCreate: async (admin) => {
+      if (admin.password) {
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
+        admin.password = await bcrypt.hash(admin.password, salt);
       }
     },
-    beforeUpdate: async (user) => {
-      if (user.changed('password')) {
+    beforeUpdate: async (admin) => {
+      if (admin.changed('password')) {
         const salt = await bcrypt.genSalt(10);
-        user.password = await bcrypt.hash(user.password, salt);
+        admin.password = await bcrypt.hash(admin.password, salt);
       }
     }
   },
@@ -59,9 +59,8 @@ const User = sequelize.define('User', {
   }
 });
 
-// Instance method to compare password
-User.prototype.comparePassword = async function(candidatePassword) {
+Admin.prototype.comparePassword = async function(candidatePassword) {
   return await bcrypt.compare(candidatePassword, this.password);
 };
 
-export default User;
+export default Admin;

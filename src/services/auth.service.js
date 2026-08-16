@@ -1,41 +1,36 @@
-import { User } from '../models/index.js';
+import { Admin } from '../models/index.js';
 import { AppError } from '../utils/apiResponse.js';
 import { generateToken } from '../utils/jwt.js';
 
-export const registerUser = async (userData) => {
-  const { name, email, password } = userData;
+export const registerAdmin = async (adminData) => {
+  const { name, email, password } = adminData;
 
-  // Check if user exists
-  const existingUser = await User.findOne({ where: { email } });
-  if (existingUser) {
+  const existingAdmin = await Admin.findOne({ where: { email } });
+  if (existingAdmin) {
     throw new AppError('Email already in use', 400);
   }
 
-  // Create user
-  const user = await User.create({ name, email, password });
+  const admin = await Admin.create({ name, email, password });
   
-  // Exclude password from returned object
-  const userWithoutPassword = user.toJSON();
-  delete userWithoutPassword.password;
+  const adminWithoutPassword = admin.toJSON();
+  delete adminWithoutPassword.password;
 
-  const token = generateToken({ id: user.id });
+  const token = generateToken({ id: admin.id });
 
-  return { user: userWithoutPassword, token };
+  return { admin: adminWithoutPassword, token };
 };
 
-export const loginUser = async (email, password) => {
-  // Find user with password
-  const user = await User.scope('withPassword').findOne({ where: { email } });
+export const loginAdmin = async (email, password) => {
+  const admin = await Admin.scope('withPassword').findOne({ where: { email } });
   
-  if (!user || !(await user.comparePassword(password))) {
+  if (!admin || !(await admin.comparePassword(password))) {
     throw new AppError('Incorrect email or password', 401);
   }
 
-  // Exclude password from returned object
-  const userWithoutPassword = user.toJSON();
-  delete userWithoutPassword.password;
+  const adminWithoutPassword = admin.toJSON();
+  delete adminWithoutPassword.password;
 
-  const token = generateToken({ id: user.id });
+  const token = generateToken({ id: admin.id });
 
-  return { user: userWithoutPassword, token };
+  return { admin: adminWithoutPassword, token };
 };

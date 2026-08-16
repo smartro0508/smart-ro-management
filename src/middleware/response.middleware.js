@@ -1,10 +1,13 @@
 const responseMiddleware = (req, res, next) => {
-  res.success = (data = null, message = 'Success', statusCode = 200) => {
-    return res.status(statusCode).json({
+  res.success = (data, message = 'Success', statusCode = 200) => {
+    const payload = {
       success: true,
-      message,
-      data
-    });
+      message
+    };
+    if (data !== undefined) {
+      payload.data = data;
+    }
+    return res.status(statusCode).json(payload);
   };
   next();
 };
