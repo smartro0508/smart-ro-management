@@ -6,6 +6,10 @@ import { resizeProductImages } from '../middleware/imageResize.middleware.js';
 
 const router = express.Router();
 
+router.post('/get-all', productController.getProducts);
+router.post('/get/:id', productController.getProduct);
+router.post('/search', productController.searchProducts);
+
 router.use(protect);
 
 router.post(
@@ -14,8 +18,7 @@ router.post(
   resizeProductImages,
   productController.createProduct
 );
-router.post('/get-all', productController.getProducts);
-router.post('/get/:id', productController.getProduct);
+
 router.post(
   '/update/:id',
   uploadProductImages,
@@ -23,5 +26,4 @@ router.post(
   productController.updateProduct
 );
 router.post('/delete/:id', productController.deleteProduct);
-router.post('/search', productController.searchProducts);
 export default router;

@@ -13,10 +13,6 @@ export const getContactUsList = asyncHandler(async (req, res) => {
   return res.success(contacts, messages.FETCHED, 200);
 });
 
-export const getContactUs = asyncHandler(async (req, res) => {
-  const contact = await contactUsService.getContactUsById(req.params.id);
-  return res.success(contact, messages.FETCHED, 200);
-});
 
 export const updateContactUsStatus = asyncHandler(async (req, res) => {
   const { status } = req.body;

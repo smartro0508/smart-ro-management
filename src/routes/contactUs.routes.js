@@ -11,7 +11,6 @@ router.post('/create', contactUsController.createContactUs);
 router.use(protect);
 
 router.post('/get-all', contactUsController.getContactUsList);
-router.post('/get/:id', contactUsController.getContactUs);
 router.post('/update-status/:id', contactUsController.updateContactUsStatus);
 router.post('/delete/:id', contactUsController.deleteContactUs);
 

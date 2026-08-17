@@ -12,6 +12,11 @@ export const getTestimonials = asyncHandler(async (req, res) => {
   return res.success(testimonials, messages.FETCHED, 200);
 });
 
+export const getActiveTestimonials = asyncHandler(async (req, res) => {
+  const testimonials = await testimonialService.getActiveTestimonials();
+  return res.success(testimonials, messages.FETCHED, 200);
+});
+
 export const getTestimonial = asyncHandler(async (req, res) => {
   const testimonial = await testimonialService.getTestimonialById(req.params.id);
   return res.success(testimonial, messages.FETCHED, 200);

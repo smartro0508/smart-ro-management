@@ -23,6 +23,14 @@ const Product = sequelize.define('Product', {
   images: {
     type: DataTypes.JSON,
     allowNull: true,
+    get() {
+      const rawValue = this.getDataValue('images');
+      if (!rawValue) return [];
+      if (typeof rawValue === 'string') {
+        try { return JSON.parse(rawValue); } catch (e) { return []; }
+      }
+      return rawValue;
+    }
   },
   shortDescription: {
     type: DataTypes.TEXT,
@@ -48,10 +56,26 @@ const Product = sequelize.define('Product', {
   features: {
     type: DataTypes.JSON,
     allowNull: true,
+    get() {
+      const rawValue = this.getDataValue('features');
+      if (!rawValue) return [];
+      if (typeof rawValue === 'string') {
+        try { return JSON.parse(rawValue); } catch (e) { return []; }
+      }
+      return rawValue;
+    }
   },
   specifications: {
     type: DataTypes.JSON,
     allowNull: true,
+    get() {
+      const rawValue = this.getDataValue('specifications');
+      if (!rawValue) return {};
+      if (typeof rawValue === 'string') {
+        try { return JSON.parse(rawValue); } catch (e) { return {}; }
+      }
+      return rawValue;
+    }
   },
   warranty: {
     type: DataTypes.STRING,

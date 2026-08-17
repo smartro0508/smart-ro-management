@@ -4,9 +4,21 @@ const handleJWTError = () => new AppError('Invalid token. Please log in again!',
 const handleJWTExpiredError = () => new AppError('Your token has expired! Please log in again.', 401);
 
 const sendErrorDev = (err, res) => {
-  res.status(err.statusCode || 500).json({
+  let message = err.message;
+  if (err.name === 'SequelizeValidationError' && err.errors && err.errors.length > 0) {
+    message = err.errors.map(e => e.message).join(', ');
+  }
+  if (err.name === 'SequelizeUniqueConstraintError') {
+    message = 'Duplicate entry found for a unique field.';
+    if (err.errors && err.errors.length > 0) {
+      message = `Duplicate entry: ${err.errors[0].path} must be unique.`;
+    }
+  }
+
+  res.status(err.statusCode || (err.name.includes('Sequelize') ? 400 : 500)).json({
     success: false,
-    message: err.message,
+    message: message,
+    error: err
   });
 };
 

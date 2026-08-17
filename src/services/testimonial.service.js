@@ -9,6 +9,13 @@ export const getAllTestimonials = async () => {
   return await Testimonial.findAll();
 };
 
+export const getActiveTestimonials = async () => {
+  return await Testimonial.findAll({
+    where: { status: 'Active' },
+    order: [['createdAt', 'DESC']]
+  });
+};
+
 export const getTestimonialById = async (id) => {
   const testimonial = await Testimonial.findByPk(id);
   if (!testimonial) throw new AppError('Testimonial not found', 404);
