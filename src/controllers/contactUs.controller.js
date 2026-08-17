@@ -8,7 +8,8 @@ export const createContactUs = asyncHandler(async (req, res) => {
 });
 
 export const getContactUsList = asyncHandler(async (req, res) => {
-  const contacts = await contactUsService.getAllContactUs();
+  const { fromDate, toDate } = req.body;
+  const contacts = await contactUsService.getAllContactUs({ fromDate, toDate });
   return res.success(contacts, messages.FETCHED, 200);
 });
 

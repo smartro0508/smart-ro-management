@@ -1,4 +1,5 @@
 import { Invoice } from '../models/index.js';
+import { Op } from 'sequelize';
 import asyncHandler from '../utils/asyncHandler.js';
 import { AppError } from '../utils/apiResponse.js';
 
@@ -8,7 +9,16 @@ export const createInvoice = asyncHandler(async (req, res) => {
 });
 
 export const getInvoices = asyncHandler(async (req, res) => {
-  const invoices = await Invoice.findAll();
+  const { fromDate, toDate } = req.body;
+  const where = {};
+  
+  if (fromDate && toDate) {
+    where.createdAt = {
+      [Op.between]: [new Date(fromDate), new Date(toDate + 'T23:59:59.999Z')]
+    };
+  }
+  
+  const invoices = await Invoice.findAll({ where, order: [['createdAt', 'DESC']] });
   return res.success(invoices, 'Invoices fetched successfully', 200);
 });
 

@@ -1,12 +1,19 @@
 import { ContactUs } from '../models/index.js';
 import { AppError } from '../utils/apiResponse.js';
+import { Op } from 'sequelize';
 
 export const createContactUs = async (data) => {
   return await ContactUs.create(data);
 };
 
-export const getAllContactUs = async () => {
-  return await ContactUs.findAll();
+export const getAllContactUs = async (filters = {}) => {
+  const where = {};
+  if (filters.fromDate && filters.toDate) {
+    where.createdAt = {
+      [Op.between]: [new Date(filters.fromDate), new Date(filters.toDate + 'T23:59:59.999Z')]
+    };
+  }
+  return await ContactUs.findAll({ where, order: [['createdAt', 'DESC']] });
 };
 
 export const getContactUsById = async (id) => {

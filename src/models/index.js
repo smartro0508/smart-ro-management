@@ -8,6 +8,7 @@ import Expense from './expense.model.js';
 import Purchase from './purchase.model.js';
 import Setting from './setting.model.js';
 import Invoice from './invoice.model.js';
+import Gallery from './gallery.model.js';
 import { sequelize } from '../config/database.js';
 
 Admin.hasMany(RefreshToken, {
@@ -32,5 +33,6 @@ export {
   Purchase,
   Setting,
   Invoice,
+  Gallery,
   sequelize
 };

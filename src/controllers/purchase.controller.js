@@ -7,7 +7,8 @@ export const createPurchase = asyncHandler(async (req, res) => {
 });
 
 export const getPurchases = asyncHandler(async (req, res) => {
-  const purchases = await purchaseService.getAllPurchases();
+  const { fromDate, toDate } = req.body;
+  const purchases = await purchaseService.getAllPurchases({ fromDate, toDate });
   return res.success(purchases, 'Purchases fetched successfully', 200);
 });
 

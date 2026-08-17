@@ -51,3 +51,22 @@ export const resizeProductImages = asyncHandler(async (req, res, next) => {
 
   next();
 });
+
+export const resizeGalleryImage = asyncHandler(async (req, res, next) => {
+  if (!req.file) return next();
+
+  const uploadDir = path.join(process.cwd(), 'uploads', 'images');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  req.body.image = `gallery-${crypto.randomUUID()}-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(1000, 1000, { fit: 'inside' })
+    .toFormat('jpeg')
+    .jpeg({ quality: 85 })
+    .toFile(`uploads/images/${req.body.image}`);
+
+  next();
+});

@@ -44,10 +44,7 @@ const Product = sequelize.define('Product', {
     type: DataTypes.DECIMAL(5, 2),
     allowNull: true,
   },
-  sku: {
-    type: DataTypes.STRING,
-    allowNull: true,
-  },
+
   features: {
     type: DataTypes.JSON,
     allowNull: true,

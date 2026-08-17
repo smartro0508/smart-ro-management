@@ -14,8 +14,14 @@ export const createCustomer = async (data) => {
   return await Customer.create(data);
 };
 
-export const getAllCustomers = async () => {
-  return await Customer.findAll();
+export const getAllCustomers = async (filters = {}) => {
+  const where = {};
+  if (filters.fromDate && filters.toDate) {
+    where.createdAt = {
+      [Op.between]: [new Date(filters.fromDate), new Date(filters.toDate + 'T23:59:59.999Z')]
+    };
+  }
+  return await Customer.findAll({ where, order: [['createdAt', 'DESC']] });
 };
 
 export const getCustomerById = async (id) => {

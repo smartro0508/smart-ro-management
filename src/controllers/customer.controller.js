@@ -8,7 +8,8 @@ export const createCustomer = asyncHandler(async (req, res) => {
 });
 
 export const getCustomers = asyncHandler(async (req, res) => {
-  const customers = await customerService.getAllCustomers();
+  const { fromDate, toDate } = req.body;
+  const customers = await customerService.getAllCustomers({ fromDate, toDate });
   return res.success(customers, messages.FETCHED, 200);
 });
 
