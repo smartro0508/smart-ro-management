@@ -89,3 +89,22 @@ export const resizeGalleryImage = asyncHandler(async (req, res, next) => {
 
   next();
 });
+
+export const resizeServiceImage = asyncHandler(async (req, res, next) => {
+  if (!req.file) return next();
+
+  const uploadDir = path.join(__dirname, '../../uploads/images');
+  if (!fs.existsSync(uploadDir)) {
+    fs.mkdirSync(uploadDir, { recursive: true });
+  }
+
+  req.body.image = `service-${crypto.randomUUID()}-${Date.now()}.jpeg`;
+
+  await sharp(req.file.buffer)
+    .resize(800, 800, { fit: 'inside' })
+    .toFormat('jpeg')
+    .jpeg({ quality: 85 })
+    .toFile(path.join(uploadDir, req.body.image));
+
+  next();
+});

@@ -22,3 +22,5 @@ export const uploadProductImages = upload.fields([
 ]);
 
 export const uploadGalleryImage = upload.single('image');
+
+export const uploadServiceImage = upload.single('image');

@@ -11,8 +11,8 @@ import purchaseRoutes from './purchase.routes.js';
 import dashboardRoutes from './dashboard.routes.js';
 import reportRoutes from './report.routes.js';
 import settingRoutes from './setting.routes.js';
-import invoiceRoutes from './invoice.routes.js';
 import galleryRoutes from './gallery.routes.js';
+import serviceRoutes from './service.routes.js';
 
 const router = express.Router();
 
@@ -28,10 +28,10 @@ router.use('/contact-us', contactUsRoutes);
 router.use('/testimonials', testimonialRoutes);
 router.use('/expenses', expenseRoutes);
 router.use('/purchases', purchaseRoutes);
-router.use('/invoices', invoiceRoutes);
 router.use('/gallery', galleryRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/reports', reportRoutes);
 router.use('/settings', settingRoutes);
+router.use('/services', serviceRoutes);
 
 export default router;
