@@ -36,6 +36,11 @@ if (process.env.NODE_ENV === 'development') {
 // Global Response Middleware
 app.use(responseMiddleware);
 
+// Base URL route for health check / success message
+app.get('/', (req, res) => {
+  res.success(null, 'SMART-RO Management API is running successfully!');
+});
+
 // API Routes
 app.use('/api/v1', routes);
 
