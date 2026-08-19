@@ -9,6 +9,7 @@ import Purchase from './purchase.model.js';
 import Setting from './setting.model.js';
 import Gallery from './gallery.model.js';
 import Service from './service.model.js';
+import Invoice from './invoice.model.js';
 import { sequelize } from '../config/database.js';
 
 Admin.hasMany(RefreshToken, {
@@ -21,6 +22,7 @@ RefreshToken.belongsTo(Admin, {
   foreignKey: 'adminId',
   as: 'admin'
 });
+
 
 // Force all table names to lowercase to fix Linux/Windows case-sensitivity issues
 for (const modelName in sequelize.models) {
@@ -45,5 +47,6 @@ export {
   Setting,
   Gallery,
   Service,
+  Invoice,
   sequelize
 };

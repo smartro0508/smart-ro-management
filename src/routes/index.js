@@ -13,6 +13,7 @@ import reportRoutes from './report.routes.js';
 import settingRoutes from './setting.routes.js';
 import galleryRoutes from './gallery.routes.js';
 import serviceRoutes from './service.routes.js';
+import invoiceRoutes from './invoice.routes.js';
 
 const router = express.Router();
 
@@ -33,5 +34,6 @@ router.use('/dashboard', dashboardRoutes);
 router.use('/reports', reportRoutes);
 router.use('/settings', settingRoutes);
 router.use('/services', serviceRoutes);
+router.use('/invoices', invoiceRoutes);
 
 export default router;
