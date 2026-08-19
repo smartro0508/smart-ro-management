@@ -1,9 +1,9 @@
 import { Sequelize } from 'sequelize';
 import env from './env.js';
 
-const sequelize = new Sequelize(env.db.name, env.db.user, env.db.password, {
-  host: env.db.host,
-  port: env.db.port,
+const sequelize = new Sequelize("railway", "root", "JayUMxTWgMxRZjrYKgRxPzhtUnteLmFB", {
+  host: "switchback.proxy.rlwy.net",
+  port: 20264,
   dialect: 'mysql',
   logging: env.nodeEnv === 'development' ? console.log : false,
   pool: {
