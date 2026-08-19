@@ -8,10 +8,6 @@ const startServer = async () => {
     // Connect to database
     await connectDB();
 
-    // Sync models (creates tables in the database if they don't exist)
-    // await sequelize.sync({ alter: true });
-    // console.log('Database synced');
-
     // Start server
     app.listen(env.port, () => {
       console.log(`Server is running in ${env.nodeEnv} mode on port ${env.port}`);

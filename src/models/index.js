@@ -22,6 +22,17 @@ RefreshToken.belongsTo(Admin, {
   as: 'admin'
 });
 
+// Force all table names to lowercase to fix Linux/Windows case-sensitivity issues
+for (const modelName in sequelize.models) {
+  const model = sequelize.models[modelName];
+  if (model.tableName) {
+    model.tableName = model.tableName.toLowerCase();
+  }
+  if (model.options && model.options.tableName) {
+    model.options.tableName = model.options.tableName.toLowerCase();
+  }
+}
+
 export {
   Admin,
   RefreshToken,
