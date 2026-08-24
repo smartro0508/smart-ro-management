@@ -53,6 +53,11 @@ export const updateService = async (id, data) => {
     try { data.keypoints = JSON.parse(data.keypoints); } catch (e) {}
   }
 
+  // Prevent overwriting the existing image if no new image is provided
+  if (!data.image || data.image === '' || data.image === 'null' || data.image === 'undefined') {
+    delete data.image;
+  }
+
   try {
     const updated = await service.update(data);
     
