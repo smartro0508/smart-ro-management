@@ -21,7 +21,17 @@ export const getAllCustomers = async (filters = {}) => {
       [Op.between]: [new Date(filters.fromDate), new Date(filters.toDate + 'T23:59:59.999Z')]
     };
   }
-  return await Customer.findAll({ where, order: [['createdAt', 'DESC']] });
+
+  const page = filters.page ? parseInt(filters.page, 10) : 1;
+  const limit = filters.limit ? parseInt(filters.limit, 10) : 30;
+  const offset = (page - 1) * limit;
+
+  return await Customer.findAll({ 
+    where, 
+    limit, 
+    offset, 
+    order: [['createdAt', 'DESC']] 
+  });
 };
 
 export const getCustomerById = async (id) => {

@@ -15,6 +15,14 @@ const ServiceModel = sequelize.define('Service', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  servicecost: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true,
+  },
+  serviceproductcost: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: true,
+  },
   keypoints: {
     type: DataTypes.JSON,
     allowNull: true,

@@ -1,25 +1,30 @@
-import { Sequelize } from 'sequelize';
-import env from './env.js';
+import { Sequelize } from "sequelize";
+import env from "./env.js";
 
-const sequelize = new Sequelize("railway", "root", "JayUMxTWgMxRZjrYKgRxPzhtUnteLmFB", {
-  host: "switchback.proxy.rlwy.net",
-  port: 20264,
-  dialect: 'mysql',
-  logging: env.nodeEnv === 'development' ? console.log : false,
-  pool: {
-    max: 5,
-    min: 0,
-    acquire: 30000,
-    idle: 10000
-  }
-});
+const sequelize = new Sequelize(
+  "railway",
+  "root",
+  "JayUMxTWgMxRZjrYKgRxPzhtUnteLmFB",
+  {
+    host: "switchback.proxy.rlwy.net",
+    port: 20264,
+    dialect: "mysql",
+    logging: env.nodeEnv === "development" ? console.log : false,
+    pool: {
+      max: 5,
+      min: 0,
+      acquire: 30000,
+      idle: 10000,
+    },
+  },
+);
 
 const connectDB = async () => {
   try {
     await sequelize.authenticate();
-    console.log('Database connection has been established successfully.');
+    console.log("Database connection has been established successfully.");
   } catch (error) {
-    console.error('Unable to connect to the database:', error);
+    console.error("Unable to connect to the database:", error);
     process.exit(1);
   }
 };

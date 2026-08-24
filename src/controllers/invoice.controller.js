@@ -8,14 +8,19 @@ export const createInvoice = asyncHandler(async (req, res) => {
 });
 
 export const getInvoices = asyncHandler(async (req, res) => {
-  const { fromDate, toDate } = req.body;
-  const invoices = await invoiceService.getAllInvoices({ fromDate, toDate });
+  const { fromDate, toDate, page, limit } = req.body;
+  const invoices = await invoiceService.getAllInvoices({ fromDate, toDate, page, limit });
   return res.success(invoices, messages.FETCHED, 200);
 });
 
 export const getInvoice = asyncHandler(async (req, res) => {
   const invoice = await invoiceService.getInvoiceById(req.params.id);
   return res.success(invoice, messages.FETCHED, 200);
+});
+
+export const updateInvoice = asyncHandler(async (req, res) => {
+  const invoice = await invoiceService.updateInvoice(req.params.id, req.body);
+  return res.success(invoice, messages.UPDATED || 'Updated successfully', 200);
 });
 
 export const deleteInvoice = asyncHandler(async (req, res) => {

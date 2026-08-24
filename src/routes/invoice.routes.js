@@ -8,6 +8,7 @@ router.use(protect);
 router.post('/create', invoiceController.createInvoice);
 router.post('/get-all', invoiceController.getInvoices);
 router.post('/get/:id', invoiceController.getInvoice);
+router.post('/update/:id', invoiceController.updateInvoice);
 router.post('/delete/:id', invoiceController.deleteInvoice);
 
 export default router;

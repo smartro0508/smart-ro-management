@@ -29,8 +29,14 @@ export const getAllInvoices = async (filters = {}) => {
       where.invoiceDate = { [Op.lte]: filters.toDate };
     }
 
+    const page = filters.page ? parseInt(filters.page, 10) : 1;
+    const limit = filters.limit ? parseInt(filters.limit, 10) : 30;
+    const offset = (page - 1) * limit;
+
     const invoices = await Invoice.findAll({
       where,
+      limit,
+      offset,
       order: [['createdAt', 'DESC']]
     });
     return invoices;
@@ -43,6 +49,18 @@ export const getInvoiceById = async (id) => {
   try {
     const invoice = await Invoice.findByPk(id);
     if (!invoice) throw new AppError(messages.NOT_FOUND, 404);
+    return invoice;
+  } catch (error) {
+    throw new AppError(error.message || messages.SERVER_ERROR, error.statusCode || 500);
+  }
+};
+
+export const updateInvoice = async (id, invoiceData) => {
+  try {
+    const invoice = await Invoice.findByPk(id);
+    if (!invoice) throw new AppError(messages.NOT_FOUND, 404);
+    
+    await invoice.update(invoiceData);
     return invoice;
   } catch (error) {
     throw new AppError(error.message || messages.SERVER_ERROR, error.statusCode || 500);
