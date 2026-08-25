@@ -1,4 +1,4 @@
-import InvoiceProducts from '../models/invoiceProduct.model.js';
+import { InvoiceProducts } from '../models/index.js';
 import { Op } from 'sequelize';
 
 export const createProduct = async (data) => InvoiceProducts.create(data);
