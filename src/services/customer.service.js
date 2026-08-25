@@ -11,6 +11,14 @@ export const createCustomer = async (data) => {
   } else {
     data.email = null;
   }
+  
+  if (data.phoneNumber) {
+    const existingPhone = await Customer.findOne({ where: { phoneNumber: data.phoneNumber } });
+    if (existingPhone) {
+      throw new AppError('Alredy exists this customer', 400);
+    }
+  }
+
   return await Customer.create(data);
 };
 
