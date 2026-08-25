@@ -87,14 +87,6 @@ const Invoice = sequelize.define('Invoice', {
   termsnotes: {
     type: DataTypes.TEXT,
     allowNull: true,
-  },
-  productnotes: {
-    type: DataTypes.TEXT,
-    allowNull: true,
-  },
-  servicenotes: {
-    type: DataTypes.TEXT,
-    allowNull: true,
   }
 });
 

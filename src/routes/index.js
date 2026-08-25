@@ -10,6 +10,8 @@ import purchaseRoutes from './purchase.routes.js';
 
 import dashboardRoutes from './dashboard.routes.js';
 import reportRoutes from './report.routes.js';
+import invoiceProductRoutes from './invoiceProduct.routes.js';
+import invoiceServiceRoutes from './invoiceService.routes.js';
 import settingRoutes from './setting.routes.js';
 import galleryRoutes from './gallery.routes.js';
 import serviceRoutes from './service.routes.js';
@@ -32,6 +34,8 @@ router.use('/purchases', purchaseRoutes);
 router.use('/gallery', galleryRoutes);
 router.use('/dashboard', dashboardRoutes);
 router.use('/reports', reportRoutes);
+router.use('/invoice-products', invoiceProductRoutes);
+router.use('/invoice-services', invoiceServiceRoutes);
 router.use('/settings', settingRoutes);
 router.use('/services', serviceRoutes);
 router.use('/invoices', invoiceRoutes);
