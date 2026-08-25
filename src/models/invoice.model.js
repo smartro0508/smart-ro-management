@@ -74,6 +74,27 @@ const Invoice = sequelize.define('Invoice', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
     defaultValue: 0,
+  },
+  paymentmethod: {
+    type: DataTypes.STRING,
+    allowNull: true,
+  },
+  paymentstatus: {
+    type: DataTypes.STRING,
+    allowNull: true,
+    defaultValue: 'Unpaid',
+  },
+  termsnotes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  productnotes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
+  },
+  servicenotes: {
+    type: DataTypes.TEXT,
+    allowNull: true,
   }
 });
 
