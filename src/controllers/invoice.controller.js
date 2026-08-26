@@ -4,7 +4,15 @@ import messages from '../constants/messages.js';
 
 export const createInvoice = asyncHandler(async (req, res) => {
   const invoice = await invoiceService.createInvoice(req.body);
-  return res.success(invoice, messages.CREATED, 201);
+  
+  const responseData = invoice.toJSON ? invoice.toJSON() : invoice;
+  const isGst = responseData.isGstApplied === true || responseData.isGstApplied === 'true';
+  
+  return res.success({
+    ...responseData,
+    invoiceId: responseData.invoiceNumber,
+    invoiceType: isGst ? 'GST' : 'NON-GST'
+  }, messages.CREATED, 201);
 });
 
 export const getInvoices = asyncHandler(async (req, res) => {

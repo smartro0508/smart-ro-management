@@ -93,10 +93,17 @@ const Invoice = sequelize.define('Invoice', {
 // Auto-generate invoiceNumber before creation
 Invoice.beforeValidate(async (invoice, options) => {
   if (!invoice.invoiceNumber) {
+    const isGst = invoice.isGstApplied === true || invoice.isGstApplied === 'true';
+
+    // Find the last invoice in the same sequence
     const lastInvoice = await Invoice.findOne({
+      where: {
+        isGstApplied: isGst
+      },
       order: [['createdAt', 'DESC']],
       attributes: ['invoiceNumber']
     });
+
     let nextNum = 1001;
     if (lastInvoice && lastInvoice.invoiceNumber) {
       const match = lastInvoice.invoiceNumber.match(/\d+$/);
@@ -104,7 +111,9 @@ Invoice.beforeValidate(async (invoice, options) => {
         nextNum = parseInt(match[0], 10) + 1;
       }
     }
-    invoice.invoiceNumber = `INV-${nextNum}`;
+
+    // Use different prefixes to maintain separate sequences without affecting existing data
+    invoice.invoiceNumber = isGst ? `INV-${nextNum}` : `NINV-${nextNum}`;
   }
 });
 

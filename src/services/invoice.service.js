@@ -7,11 +7,26 @@ import messages from '../constants/messages.js';
 import { Op } from 'sequelize';
 
 export const createInvoice = async (invoiceData) => {
-  try {
-    const invoice = await Invoice.create(invoiceData);
-    return invoice;
-  } catch (error) {
-    throw new AppError(error.message || messages.SERVER_ERROR, 500);
+  const maxRetries = 3;
+  for (let attempt = 1; attempt <= maxRetries; attempt++) {
+    try {
+      // Ensure the hook generates a new number if retrying
+      if (attempt > 1) {
+        delete invoiceData.invoiceNumber;
+      }
+      const invoice = await Invoice.create(invoiceData);
+      return invoice;
+    } catch (error) {
+      if (error.name === 'SequelizeUniqueConstraintError') {
+        if (attempt === maxRetries) {
+          throw new AppError('Failed to generate a unique invoice number due to high concurrency. Please try again.', 409);
+        }
+        // Wait a short random time before retrying to stagger concurrent requests
+        await new Promise(resolve => setTimeout(resolve, Math.random() * 100));
+        continue;
+      }
+      throw new AppError(error.message || messages.SERVER_ERROR, 500);
+    }
   }
 };
 
