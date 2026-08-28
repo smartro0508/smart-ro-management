@@ -8,6 +8,64 @@ export const createInvoice = asyncHandler(async (req, res) => {
   const responseData = invoice.toJSON ? invoice.toJSON() : invoice;
   const isGst = responseData.isGstApplied === true || responseData.isGstApplied === 'true';
   
+  try {
+    const customerPhone = responseData.customerData?.phoneNumber;
+    if (customerPhone) {
+      let formattedPhone = customerPhone.replace(/\D/g, '');
+      if (formattedPhone.length === 10) {
+        formattedPhone = '91' + formattedPhone;
+      }
+
+      var myHeaders = new Headers();
+      myHeaders.append("Content-Type", "application/json");
+      myHeaders.append("authkey", "<authkey>");
+
+      var raw = JSON.stringify({
+          "integrated_number": "919384370508",
+          "content_type": "template",
+          "payload": {
+              "messaging_product": "whatsapp",
+              "type": "template",
+              "template": {
+                  "name": "smart_ro_template",
+                  "language": {
+                      "code": "en_US",
+                      "policy": "deterministic"
+                  },
+                  "namespace": "7355a2be_b99f_47d2_89f4_fe7ae4cb1288",
+                  "to_and_components": [
+                      {
+                          "to": [
+                              formattedPhone
+                          ],
+                          "components": {
+                              "header_1": {
+                                  "type": "image",
+                                  "value": "<url of media>"
+                              }
+                          }
+                      }
+                  ]
+              }
+          }
+      });
+
+      var requestOptions = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw,
+        redirect: 'follow'
+      };
+
+      fetch("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestOptions)
+        .then(response => response.text())
+        .then(result => console.log('WhatsApp message sent successfully:', result))
+        .catch(error => console.error('Error sending WhatsApp message:', error));
+    }
+  } catch (error) {
+    console.error('Error in WhatsApp integration:', error);
+  }
+  
   return res.success({
     ...responseData,
     invoiceId: responseData.invoiceNumber,
