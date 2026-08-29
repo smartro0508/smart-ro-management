@@ -4,10 +4,10 @@ import messages from '../constants/messages.js';
 
 export const createInvoice = asyncHandler(async (req, res) => {
   const invoice = await invoiceService.createInvoice(req.body);
-  
+
   const responseData = invoice.toJSON ? invoice.toJSON() : invoice;
   const isGst = responseData.isGstApplied === true || responseData.isGstApplied === 'true';
-  
+
   try {
     const customerPhone = responseData.customerData?.phoneNumber;
     if (customerPhone) {
@@ -18,36 +18,36 @@ export const createInvoice = asyncHandler(async (req, res) => {
 
       var myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");
-      myHeaders.append("authkey", "<authkey>");
+      myHeaders.append("authkey", "564617A4Fps6vqI6a927b6bP1");
 
       var raw = JSON.stringify({
-          "integrated_number": "919384370508",
-          "content_type": "template",
-          "payload": {
-              "messaging_product": "whatsapp",
-              "type": "template",
-              "template": {
-                  "name": "smart_ro_template",
-                  "language": {
-                      "code": "en_US",
-                      "policy": "deterministic"
-                  },
-                  "namespace": "7355a2be_b99f_47d2_89f4_fe7ae4cb1288",
-                  "to_and_components": [
-                      {
-                          "to": [
-                              formattedPhone
-                          ],
-                          "components": {
-                              "header_1": {
-                                  "type": "image",
-                                  "value": "<url of media>"
-                              }
-                          }
-                      }
-                  ]
+        "integrated_number": "919384370508",
+        "content_type": "template",
+        "payload": {
+          "messaging_product": "whatsapp",
+          "type": "template",
+          "template": {
+            "name": "smart_ro_template",
+            "language": {
+              "code": "en_US",
+              "policy": "deterministic"
+            },
+            "namespace": "7355a2be_b99f_47d2_89f4_fe7ae4cb1288",
+            "to_and_components": [
+              {
+                "to": [
+                  formattedPhone
+                ],
+                "components": {
+                  "header_1": {
+                    "type": "image",
+                    "value": "<url of media>"
+                  }
+                }
               }
+            ]
           }
+        }
       });
 
       var requestOptions = {
@@ -65,7 +65,7 @@ export const createInvoice = asyncHandler(async (req, res) => {
   } catch (error) {
     console.error('Error in WhatsApp integration:', error);
   }
-  
+
   return res.success({
     ...responseData,
     invoiceId: responseData.invoiceNumber,
