@@ -53,18 +53,6 @@ const Product = sequelize.define('Product', {
     allowNull: true,
   },
 
-  features: {
-    type: DataTypes.JSON,
-    allowNull: true,
-    get() {
-      const rawValue = this.getDataValue('features');
-      if (!rawValue) return [];
-      if (typeof rawValue === 'string') {
-        try { return JSON.parse(rawValue); } catch (e) { return []; }
-      }
-      return rawValue;
-    }
-  },
   specifications: {
     type: DataTypes.JSON,
     allowNull: true,

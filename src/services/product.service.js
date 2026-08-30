@@ -32,9 +32,6 @@ export const createProduct = async (data) => {
     }
     data.slug = slug;
   }
-  if (data.features && typeof data.features === 'string') {
-    try { data.features = JSON.parse(data.features); } catch (e) {}
-  }
   if (data.specifications && typeof data.specifications === 'string') {
     try { data.specifications = JSON.parse(data.specifications); } catch (e) {}
   }
@@ -76,9 +73,6 @@ export const updateProduct = async (id, data) => {
       counter++;
     }
     data.slug = slug;
-  }
-  if (data.features && typeof data.features === 'string') {
-    try { data.features = JSON.parse(data.features); } catch (e) {}
   }
   if (data.specifications && typeof data.specifications === 'string') {
     try { data.specifications = JSON.parse(data.specifications); } catch (e) {}

@@ -87,11 +87,29 @@ const Invoice = sequelize.define('Invoice', {
   termsnotes: {
     type: DataTypes.TEXT,
     allowNull: true,
+  },
+  whatsappreminderdate: {
+    type: DataTypes.DATEONLY,
+    allowNull: true,
+  },
+  whatsappremindersent: {
+    type: DataTypes.BOOLEAN,
+    defaultValue: false,
+  },
+  whatsappremindersentat: {
+    type: DataTypes.DATE,
+    allowNull: true,
   }
 });
 
 // Auto-generate invoiceNumber before creation
 Invoice.beforeValidate(async (invoice, options) => {
+  if (invoice.invoiceDate && !invoice.whatsappreminderdate) {
+    const reminderDate = new Date(invoice.invoiceDate);
+    reminderDate.setDate(reminderDate.getDate() + 120);
+    invoice.whatsappreminderdate = reminderDate;
+  }
+
   if (!invoice.invoiceNumber) {
     const isGst = invoice.isGstApplied === true || invoice.isGstApplied === 'true';
 
