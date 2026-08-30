@@ -41,7 +41,7 @@ export const createInvoice = asyncHandler(async (req, res) => {
                 "components": {
                   "header_1": {
                     "type": "image",
-                    "value": "<url of media>"
+                    "value": "https://files.msg91.com/564617/ansubrpb.jpeg"
                   }
                 }
               }
@@ -61,6 +61,48 @@ export const createInvoice = asyncHandler(async (req, res) => {
         .then(response => response.text())
         .then(result => console.log('WhatsApp message sent successfully:', result))
         .catch(error => console.error('Error sending WhatsApp message:', error));
+
+      var raw2 = JSON.stringify({
+        "integrated_number": "919384370508",
+        "content_type": "template",
+        "payload": {
+          "messaging_product": "whatsapp",
+          "type": "template",
+          "template": {
+            "name": "electronics_template",
+            "language": {
+              "code": "en",
+              "policy": "deterministic"
+            },
+            "namespace": "7355a2be_b99f_47d2_89f4_fe7ae4cb1288",
+            "to_and_components": [
+              {
+                "to": [
+                  formattedPhone
+                ],
+                "components": {
+                  "header_1": {
+                    "type": "image",
+                    "value": "https://files.msg91.com/564617/ewwrxoyy.jpeg"
+                  }
+                }
+              }
+            ]
+          }
+        }
+      });
+
+      var requestOptions2 = {
+        method: 'POST',
+        headers: myHeaders,
+        body: raw2,
+        redirect: 'follow'
+      };
+
+      fetch("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestOptions2)
+        .then(response => response.text())
+        .then(result => console.log('WhatsApp electronics message sent successfully:', result))
+        .catch(error => console.error('Error sending WhatsApp electronics message:', error));
     }
   } catch (error) {
     console.error('Error in WhatsApp integration:', error);
