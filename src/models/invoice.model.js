@@ -88,6 +88,10 @@ const Invoice = sequelize.define('Invoice', {
     type: DataTypes.TEXT,
     allowNull: true,
   },
+  reminderdays: {
+    type: DataTypes.INTEGER,
+    allowNull: true,
+  },
   whatsappreminderdate: {
     type: DataTypes.DATEONLY,
     allowNull: true,
@@ -104,10 +108,12 @@ const Invoice = sequelize.define('Invoice', {
 
 // Auto-generate invoiceNumber before creation
 Invoice.beforeValidate(async (invoice, options) => {
-  if (invoice.invoiceDate && !invoice.whatsappreminderdate) {
+  if (invoice.invoiceDate && invoice.reminderdays != null) {
     const reminderDate = new Date(invoice.invoiceDate);
-    reminderDate.setDate(reminderDate.getDate() + 120);
+    reminderDate.setDate(reminderDate.getDate() + invoice.reminderdays);
     invoice.whatsappreminderdate = reminderDate;
+  } else if (invoice.reminderdays == null) {
+    invoice.whatsappreminderdate = null;
   }
 
   if (!invoice.invoiceNumber) {

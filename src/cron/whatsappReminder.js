@@ -19,18 +19,18 @@ const sendWhatsAppReminder = async (phone) => {
 
   // Message 1
   var raw1 = JSON.stringify({
-    "integrated_number": "919384370508",
+    "integrated_number": "919384450508",
     "content_type": "template",
     "payload": {
       "messaging_product": "whatsapp",
       "type": "template",
       "template": {
-        "name": "smart_ro_template",
+        "name": "smart_ro",
         "language": {
-          "code": "en_US",
+          "code": "en",
           "policy": "deterministic"
         },
-        "namespace": "7355a2be_b99f_47d2_89f4_fe7ae4cb1288",
+        "namespace": "3510a53f_d642_499c_aa37_2c9c86c3582a",
         "to_and_components": [
           {
             "to": [formattedPhone],
@@ -48,18 +48,18 @@ const sendWhatsAppReminder = async (phone) => {
 
   // Message 2
   var raw2 = JSON.stringify({
-    "integrated_number": "919384370508",
+    "integrated_number": "919384450508",
     "content_type": "template",
     "payload": {
       "messaging_product": "whatsapp",
       "type": "template",
       "template": {
-        "name": "electronics_template",
+        "name": "electronics",
         "language": {
           "code": "en",
           "policy": "deterministic"
         },
-        "namespace": "7355a2be_b99f_47d2_89f4_fe7ae4cb1288",
+        "namespace": "3510a53f_d642_499c_aa37_2c9c86c3582a",
         "to_and_components": [
           {
             "to": [formattedPhone],
@@ -105,7 +105,7 @@ const sendWhatsAppReminder = async (phone) => {
 export const initCronJobs = () => {
   // Run everyday at 10:00 AM
   cron.schedule('0 10 * * *', async () => {
-    console.log('Running WhatsApp 120-day reminder cron job...');
+    console.log('Running WhatsApp dynamic reminder cron job...');
     try {
       const today = new Date().toISOString().split('T')[0];
 
@@ -123,14 +123,14 @@ export const initCronJobs = () => {
           const customerPhone = invoice.customerData?.phoneNumber;
           if (customerPhone) {
             const result = await sendWhatsAppReminder(customerPhone);
-            
+
             if (result.success || !result.retry) {
               invoice.whatsappremindersent = true;
               invoice.whatsappremindersentat = new Date();
               await invoice.save();
-              
+
               if (result.success) {
-                console.log(`Successfully sent WhatsApp reminder for invoice ${invoice.invoiceNumber}`);
+                console.log(`Successfully sent WhatsApp reminder (after ${invoice.reminderdays || 'configured'} days) for invoice ${invoice.invoiceNumber}`);
               } else {
                 console.log(`Marked invoice ${invoice.invoiceNumber} as sent due to non-retriable error.`);
               }
