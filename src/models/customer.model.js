@@ -45,6 +45,10 @@ const Customer = sequelize.define('Customer', {
   country: {
     type: DataTypes.STRING,
     allowNull: true,
+  },
+  gstnumber: {
+    type: DataTypes.STRING,
+    allowNull: true,
   }
 });
 

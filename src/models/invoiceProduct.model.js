@@ -18,6 +18,10 @@ const InvoiceProducts = sequelize.define('InvoiceProducts', {
   price: {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: true,
+  },
+  hsncode: {
+    type: DataTypes.STRING,
+    allowNull: true,
   }
 });
 

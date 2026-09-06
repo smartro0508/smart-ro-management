@@ -76,6 +76,10 @@ const Product = sequelize.define('Product', {
   status: {
     type: DataTypes.ENUM('Active', 'Inactive'),
     defaultValue: 'Active',
+  },
+  hsncode: {
+    type: DataTypes.STRING,
+    allowNull: true,
   }
 });
 
