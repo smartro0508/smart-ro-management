@@ -75,14 +75,9 @@ const Invoice = sequelize.define('Invoice', {
     allowNull: false,
     defaultValue: 0,
   },
-  paymentmethod: {
+  shippedto: {
     type: DataTypes.STRING,
     allowNull: true,
-  },
-  paymentstatus: {
-    type: DataTypes.STRING,
-    allowNull: true,
-    defaultValue: 'Unpaid',
   },
   termsnotes: {
     type: DataTypes.TEXT,
