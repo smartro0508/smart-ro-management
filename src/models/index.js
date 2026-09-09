@@ -12,6 +12,7 @@ import Service from './service.model.js';
 import Invoice from './invoice.model.js';
 import InvoiceProducts from './invoiceProduct.model.js';
 import InvoiceServices from './invoiceService.model.js';
+import Bank from './bank.model.js';
 import { sequelize } from '../config/database.js';
 
 Admin.hasMany(RefreshToken, {
@@ -52,5 +53,6 @@ export {
   Invoice,
   InvoiceProducts,
   InvoiceServices,
+  Bank,
   sequelize
 };

@@ -16,6 +16,7 @@ import settingRoutes from './setting.routes.js';
 import galleryRoutes from './gallery.routes.js';
 import serviceRoutes from './service.routes.js';
 import invoiceRoutes from './invoice.routes.js';
+import bankRoutes from './bank.routes.js';
 
 const router = express.Router();
 
@@ -39,5 +40,6 @@ router.use('/invoice-services', invoiceServiceRoutes);
 router.use('/settings', settingRoutes);
 router.use('/services', serviceRoutes);
 router.use('/invoices', invoiceRoutes);
+router.use('/banks', bankRoutes);
 
 export default router;
