@@ -4,12 +4,14 @@ import { Op } from 'sequelize';
 
 const sendWhatsAppReminder = async (phone) => {
   let formattedPhone = phone?.toString().replace(/\D/g, '') || '';
-  if (formattedPhone.length === 10) {
-    formattedPhone = '91' + formattedPhone;
+
+  if (formattedPhone.length >= 10) {
+    // Extract the last 10 digits and prefix with 91
+    formattedPhone = '91' + formattedPhone.slice(-10);
   }
 
-  if (formattedPhone.length < 10 || formattedPhone.length > 15) {
-    console.warn(`Invalid phone number: ${phone}`);
+  if (formattedPhone.length !== 12 || !formattedPhone.startsWith('91')) {
+    console.warn(`Invalid phone number format: ${phone}. Expected 10 digits optionally prefixed with country code.`);
     return { success: false, retry: false }; // Invalid number, do not retry
   }
 
@@ -17,15 +19,14 @@ const sendWhatsAppReminder = async (phone) => {
   myHeaders.append("Content-Type", "application/json");
   myHeaders.append("authkey", "564617A4Fps6vqI6a927b6bP1");
 
-  // Message 1
-  var raw1 = JSON.stringify({
+  var raw = JSON.stringify({
     "integrated_number": "919384450508",
     "content_type": "template",
     "payload": {
       "messaging_product": "whatsapp",
       "type": "template",
       "template": {
-        "name": "smart_ro",
+        "name": "smart_ro_reminder_message",
         "language": {
           "code": "en",
           "policy": "deterministic"
@@ -37,7 +38,7 @@ const sendWhatsAppReminder = async (phone) => {
             "components": {
               "header_1": {
                 "type": "image",
-                "value": "https://files.msg91.com/564617/ansubrpb.jpeg"
+                "value": "https://files.msg91.com/564617/xjsoinvw.jpeg"
               }
             }
           }
@@ -46,52 +47,14 @@ const sendWhatsAppReminder = async (phone) => {
     }
   });
 
-  // Message 2
-  var raw2 = JSON.stringify({
-    "integrated_number": "919384450508",
-    "content_type": "template",
-    "payload": {
-      "messaging_product": "whatsapp",
-      "type": "template",
-      "template": {
-        "name": "electronics",
-        "language": {
-          "code": "en",
-          "policy": "deterministic"
-        },
-        "namespace": "3510a53f_d642_499c_aa37_2c9c86c3582a",
-        "to_and_components": [
-          {
-            "to": [formattedPhone],
-            "components": {
-              "header_1": {
-                "type": "image",
-                "value": "https://files.msg91.com/564617/ewwrxoyy.jpeg"
-              }
-            }
-          }
-        ]
-      }
-    }
-  });
-
-  const requestOptions1 = { method: 'POST', headers: myHeaders, body: raw1, redirect: 'follow' };
-  const requestOptions2 = { method: 'POST', headers: myHeaders, body: raw2, redirect: 'follow' };
+  const requestOptions = { method: 'POST', headers: myHeaders, body: raw, redirect: 'follow' };
 
   try {
-    const res1 = await fetch("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestOptions1);
-    if (!res1.ok) {
-      const errText = await res1.text();
-      console.error(`First message failed with status ${res1.status}: ${errText}`);
-      if (res1.status >= 400 && res1.status < 500) return { success: false, retry: false }; // Client error, don't retry
-      return { success: false, retry: true }; // Server error, retry later
-    }
-
-    const res2 = await fetch("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestOptions2);
-    if (!res2.ok) {
-      const errText = await res2.text();
-      console.error(`Second message failed with status ${res2.status}: ${errText}`);
-      if (res2.status >= 400 && res2.status < 500) return { success: false, retry: false }; // Client error, don't retry
+    const res = await fetch("https://api.msg91.com/api/v5/whatsapp/whatsapp-outbound-message/bulk/", requestOptions);
+    if (!res.ok) {
+      const errText = await res.text();
+      console.error(`WhatsApp message failed with status ${res.status}: ${errText}`);
+      if (res.status >= 400 && res.status < 500) return { success: false, retry: false }; // Client error, don't retry
       return { success: false, retry: true }; // Server error, retry later
     }
 
@@ -109,12 +72,12 @@ export const initCronJobs = () => {
     try {
       const today = new Date().toISOString().split('T')[0];
 
+      // Find invoices where the reminder date has arrived or passed
       const invoices = await Invoice.findAll({
         where: {
           whatsappreminderdate: {
             [Op.lte]: today
-          },
-          whatsappremindersent: false
+          }
         }
       });
 
@@ -125,21 +88,58 @@ export const initCronJobs = () => {
             const result = await sendWhatsAppReminder(customerPhone);
 
             if (result.success || !result.retry) {
-              invoice.whatsappremindersent = true;
-              invoice.whatsappremindersentat = new Date();
-              await invoice.save();
-
               if (result.success) {
-                console.log(`Successfully sent WhatsApp reminder (after ${invoice.reminderdays || 'configured'} days) for invoice ${invoice.invoiceNumber}`);
+                console.log(`Successfully sent WhatsApp reminder for invoice ${invoice.invoiceNumber}`);
               } else {
                 console.log(`Marked invoice ${invoice.invoiceNumber} as sent due to non-retriable error.`);
               }
+
+              // Set the next reminder date if reminderdays is configured
+              if (invoice.reminderdays) {
+                const nextReminderDate = new Date(invoice.whatsappreminderdate || today);
+                nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
+
+                // If for some reason the next reminder date is still in the past or today (e.g. cron was down), 
+                // calculate based on today to avoid instant rapid re-sends.
+                const todayObj = new Date();
+                if (nextReminderDate <= todayObj) {
+                  const safeNextReminderDate = new Date();
+                  safeNextReminderDate.setDate(safeNextReminderDate.getDate() + invoice.reminderdays);
+                  invoice.whatsappreminderdate = safeNextReminderDate;
+                } else {
+                  invoice.whatsappreminderdate = nextReminderDate;
+                }
+              } else {
+                // If no reminder days configured but it still got picked up, mark as sent to avoid loop
+                invoice.whatsappremindersent = true;
+              }
+
+              invoice.whatsappremindersentat = new Date();
+              await invoice.save();
+
             } else {
               console.warn(`Transient error for invoice ${invoice.invoiceNumber}, will retry next cron cycle.`);
             }
           } else {
-            console.warn(`No phone number found for invoice ${invoice.invoiceNumber}. Marking as sent to avoid retry.`);
-            invoice.whatsappremindersent = true;
+            console.warn(`No phone number found for invoice ${invoice.invoiceNumber}. Updating to avoid retry.`);
+
+            // Skip to next interval if no phone number exists
+            if (invoice.reminderdays) {
+              const nextReminderDate = new Date(invoice.whatsappreminderdate || today);
+              nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
+
+              const todayObj = new Date();
+              if (nextReminderDate <= todayObj) {
+                const safeNextReminderDate = new Date();
+                safeNextReminderDate.setDate(safeNextReminderDate.getDate() + invoice.reminderdays);
+                invoice.whatsappreminderdate = safeNextReminderDate;
+              } else {
+                invoice.whatsappreminderdate = nextReminderDate;
+              }
+            } else {
+              invoice.whatsappremindersent = true;
+            }
+
             invoice.whatsappremindersentat = new Date();
             await invoice.save();
           }
