@@ -96,19 +96,15 @@ export const initCronJobs = () => {
 
               // Set the next reminder date if reminderdays is configured
               if (invoice.reminderdays) {
-                const nextReminderDate = new Date(invoice.whatsappreminderdate || today);
-                nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
-
-                // If for some reason the next reminder date is still in the past or today (e.g. cron was down), 
-                // calculate based on today to avoid instant rapid re-sends.
                 const todayObj = new Date();
-                if (nextReminderDate <= todayObj) {
-                  const safeNextReminderDate = new Date();
-                  safeNextReminderDate.setDate(safeNextReminderDate.getDate() + invoice.reminderdays);
-                  invoice.whatsappreminderdate = safeNextReminderDate;
-                } else {
-                  invoice.whatsappreminderdate = nextReminderDate;
+                let nextReminderDate = new Date(invoice.invoiceDate || today);
+
+                // Calculate next reminder date strictly based on the original invoice date
+                while (nextReminderDate <= todayObj) {
+                  nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
                 }
+
+                invoice.whatsappreminderdate = nextReminderDate;
               } else {
                 // If no reminder days configured but it still got picked up, mark as sent to avoid loop
                 invoice.whatsappremindersent = true;
@@ -125,17 +121,15 @@ export const initCronJobs = () => {
 
             // Skip to next interval if no phone number exists
             if (invoice.reminderdays) {
-              const nextReminderDate = new Date(invoice.whatsappreminderdate || today);
-              nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
-
               const todayObj = new Date();
-              if (nextReminderDate <= todayObj) {
-                const safeNextReminderDate = new Date();
-                safeNextReminderDate.setDate(safeNextReminderDate.getDate() + invoice.reminderdays);
-                invoice.whatsappreminderdate = safeNextReminderDate;
-              } else {
-                invoice.whatsappreminderdate = nextReminderDate;
+              let nextReminderDate = new Date(invoice.invoiceDate || today);
+
+              // Calculate next reminder date strictly based on the original invoice date
+              while (nextReminderDate <= todayObj) {
+                nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
               }
+
+              invoice.whatsappreminderdate = nextReminderDate;
             } else {
               invoice.whatsappremindersent = true;
             }

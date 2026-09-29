@@ -103,12 +103,15 @@ const Invoice = sequelize.define('Invoice', {
 
 // Auto-generate invoiceNumber before creation
 Invoice.beforeValidate(async (invoice, options) => {
-  if (invoice.invoiceDate && invoice.reminderdays != null) {
-    const reminderDate = new Date(invoice.invoiceDate);
-    reminderDate.setDate(reminderDate.getDate() + invoice.reminderdays);
-    invoice.whatsappreminderdate = reminderDate;
-  } else if (invoice.reminderdays == null) {
-    invoice.whatsappreminderdate = null;
+  // Only recalculate initial reminder date if it's a new record or these fields changed
+  if (invoice.isNewRecord || invoice.changed('invoiceDate') || invoice.changed('reminderdays')) {
+    if (invoice.invoiceDate && invoice.reminderdays != null) {
+      const reminderDate = new Date(invoice.invoiceDate);
+      reminderDate.setDate(reminderDate.getDate() + invoice.reminderdays);
+      invoice.whatsappreminderdate = reminderDate;
+    } else if (invoice.reminderdays == null) {
+      invoice.whatsappreminderdate = null;
+    }
   }
 
   if (!invoice.invoiceNumber) {
