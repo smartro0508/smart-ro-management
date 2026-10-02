@@ -144,6 +144,9 @@ export const initCronJobs = () => {
     } catch (error) {
       console.error('Error running WhatsApp reminder cron job:', error);
     }
+  }, {
+    scheduled: true,
+    timezone: "Asia/Kolkata"
   });
-  console.log('WhatsApp reminder cron job initialized (Scheduled for 10:00 AM daily).');
+  console.log('WhatsApp reminder cron job initialized (Scheduled for 10:00 AM IST daily).');
 };
