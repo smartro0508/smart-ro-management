@@ -107,7 +107,8 @@ Invoice.beforeValidate(async (invoice, options) => {
   if (invoice.isNewRecord || invoice.changed('invoiceDate') || invoice.changed('reminderdays')) {
     if (invoice.invoiceDate && invoice.reminderdays != null) {
       const reminderDate = new Date(invoice.invoiceDate);
-      reminderDate.setDate(reminderDate.getDate() + invoice.reminderdays);
+      const daysToAdd = parseInt(invoice.reminderdays, 10) || 0;
+      reminderDate.setDate(reminderDate.getDate() + daysToAdd);
       invoice.whatsappreminderdate = reminderDate;
     } else if (invoice.reminderdays == null) {
       invoice.whatsappreminderdate = null;

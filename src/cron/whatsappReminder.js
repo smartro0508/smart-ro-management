@@ -97,11 +97,12 @@ export const initCronJobs = () => {
               // Set the next reminder date if reminderdays is configured
               if (invoice.reminderdays) {
                 const todayObj = new Date();
-                let nextReminderDate = new Date(invoice.invoiceDate || today);
+                let nextReminderDate = new Date(invoice.whatsappreminderdate || invoice.invoiceDate);
 
-                // Calculate next reminder date strictly based on the original invoice date
+                // Calculate next reminder date strictly based on the previous reminder date
+                const daysToAdd = parseInt(invoice.reminderdays, 10) || 0;
                 while (nextReminderDate <= todayObj) {
-                  nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
+                  nextReminderDate.setDate(nextReminderDate.getDate() + daysToAdd);
                 }
 
                 invoice.whatsappreminderdate = nextReminderDate;
@@ -122,11 +123,12 @@ export const initCronJobs = () => {
             // Skip to next interval if no phone number exists
             if (invoice.reminderdays) {
               const todayObj = new Date();
-              let nextReminderDate = new Date(invoice.invoiceDate || today);
+              let nextReminderDate = new Date(invoice.whatsappreminderdate || invoice.invoiceDate);
 
-              // Calculate next reminder date strictly based on the original invoice date
+              // Calculate next reminder date strictly based on the previous reminder date
+              const daysToAdd = parseInt(invoice.reminderdays, 10) || 0;
               while (nextReminderDate <= todayObj) {
-                nextReminderDate.setDate(nextReminderDate.getDate() + invoice.reminderdays);
+                nextReminderDate.setDate(nextReminderDate.getDate() + daysToAdd);
               }
 
               invoice.whatsappreminderdate = nextReminderDate;
